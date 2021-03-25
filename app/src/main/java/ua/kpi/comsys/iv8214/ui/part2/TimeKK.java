@@ -68,9 +68,14 @@ public class TimeKK {
         int seconds = getSeconds();
         String zone = "AM";
         String time = "";
-        if (hours > 12) {
+        if (hours >= 12) {
             zone = "PM";
-            hours -= 12;
+            if (hours > 12) {
+                hours -= 12;
+            }
+        }
+        if (hours == 0) {
+            hours = 12;
         }
         if (hours < 10) {
             time += "0" + hours + ":";
@@ -95,17 +100,17 @@ public class TimeKK {
         resultTime.setHours(currentTime.getHours() + this.getHours());
         resultTime.setMinutes(currentTime.getMinutes() + this.getMinutes());
         resultTime.setSeconds(currentTime.getSeconds() + this.getSeconds());
-        if (resultTime.getSeconds() > 60) {
+        if (resultTime.getSeconds() >= 60) {
             int addToMinutes = (int) Math.floor(resultTime.getSeconds()/60);
             resultTime.setSeconds((int) (resultTime.getSeconds() - addToMinutes * 60));
             resultTime.setMinutes(resultTime.getMinutes() + addToMinutes);
         }
-        if (resultTime.getMinutes() > 60) {
+        if (resultTime.getMinutes() >= 60) {
             int addToHours = (int) Math.floor(resultTime.getMinutes()/60);
             resultTime.setMinutes((int) (resultTime.getMinutes() - addToHours * 60));
             resultTime.setHours(resultTime.getHours() + addToHours);
         }
-        if (resultTime.getHours() > 24) {
+        if (resultTime.getHours() >= 24) {
             resultTime.setHours(resultTime.getHours() - 24);
         }
         return resultTime;
@@ -135,17 +140,17 @@ public class TimeKK {
         resultTime.setHours(time1.getHours() + time2.getHours());
         resultTime.setMinutes(time1.getMinutes() + time2.getMinutes());
         resultTime.setSeconds(time1.getSeconds() + time2.getSeconds());
-        if (resultTime.getSeconds() > 60) {
+        if (resultTime.getSeconds() >= 60) {
             int addToMinutes = (int) Math.floor(resultTime.getSeconds()/60);
             resultTime.setSeconds((int) (resultTime.getSeconds() - addToMinutes * 60));
             resultTime.setMinutes(resultTime.getMinutes() + addToMinutes);
         }
-        if (resultTime.getMinutes() > 60) {
+        if (resultTime.getMinutes() >= 60) {
             int addToHours = (int) Math.floor(resultTime.getMinutes()/60);
             resultTime.setMinutes((int) (resultTime.getMinutes() - addToHours * 60));
             resultTime.setHours(resultTime.getHours() + addToHours);
         }
-        if (resultTime.getHours() > 24) {
+        if (resultTime.getHours() >= 24) {
             resultTime.setHours(resultTime.getHours() - 24);
         }
         return resultTime;

@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.Random;
 
 public class Part1 {
-    private String students = "Дмитренко Олександр - ІП-84; Матвійчук Андрій - ІВ-83; " +
+    private final String students = "Дмитренко Олександр - ІП-84; Матвійчук Андрій - ІВ-83; " +
             "Лесик Сергій - ІО-82; Ткаченко Ярослав - ІВ-83; Аверкова Анастасія - ІО-83; " +
             "Соловйов Даніїл - ІО-83; Рахуба Вероніка - ІО-81; Кочерук Давид - ІВ-83; " +
             "Лихацька Юлія- ІВ-82; Головенець Руслан - ІВ-83; Ющенко Андрій - ІО-82; " +
@@ -18,32 +18,35 @@ public class Part1 {
             "Тарасенко Юлія - ІО-82; Дрозд Світлана - ІВ-81; Фещенко Кирил - ІО-82; " +
             "Крамар Віктор - ІО-83; Іванов Дмитро - ІВ-82";
 
-    private int[] points = {12, 12, 12, 12, 12, 12, 12, 16};
+    private final int[] points = {12, 12, 12, 12, 12, 12, 12, 16};
+    private HashMap<String, ArrayList<String>> task1;
+    private HashMap<String, HashMap<String, ArrayList<Integer>>> task2;
+    private HashMap<String, HashMap<String, Integer>> task3;
+    private HashMap<String, Float> task4;
+    private HashMap<String, ArrayList<String>> task5;
 
     public HashMap<String, ArrayList<String>> studentsGroups() {
-        HashMap<String, ArrayList<String>> studentsGroups = new HashMap<String, ArrayList<String>>();
+        task1 = new HashMap<>();
         String[] studentGroup = students.split(";");
-        for (int i = 0; i < studentGroup.length; i++) {
-            String[] singleStudent = studentGroup[i].split("-");
+        for (String s : studentGroup) {
+            String[] singleStudent = s.split("-");
             String student = singleStudent[0];
             String group = singleStudent[1] + "-" + singleStudent[2];
             //studentsGroups.put(group, student);
-            ArrayList<String> groupStudents = studentsGroups.get(group);
+            ArrayList<String> groupStudents = task1.get(group);
 
             // if list does not exist create it
             if (groupStudents == null) {
-                groupStudents = new ArrayList<String>();
+                groupStudents = new ArrayList<>();
                 groupStudents.add(student);
-                studentsGroups.put(group, groupStudents);
+                task1.put(group, groupStudents);
             } else {
                 // add if item is not already in list
                 if (!groupStudents.contains(student)) groupStudents.add(student);
             }
         }
-        studentsGroups.forEach((k, v) -> {
-            Collections.sort(v);
-        });
-        return studentsGroups;
+        task1.forEach((k, v) -> Collections.sort(v));
+        return task1;
     }
 
     private int randomValue(int maxValue) {
@@ -63,24 +66,24 @@ public class Part1 {
     }
 
     public HashMap<String, HashMap<String, ArrayList<Integer>>> studentsPoint() {
-        HashMap<String, HashMap<String, ArrayList<Integer>>> studentsPoint = new HashMap<>();
-        studentsGroups().forEach((k, v) -> {
+        task2 = new HashMap<>();
+        task1.forEach((k, v) -> {
             HashMap<String, ArrayList<Integer>> values = new HashMap<>();
             v.forEach((s) -> {
                 ArrayList<Integer> studentPoints = new ArrayList<>();
-                for (int i = 0; i < points.length; i++) {
-                    studentPoints.add(randomValue(points[i]));
+                for (int point : points) {
+                    studentPoints.add(randomValue(point));
                 }
                 values.put(s, studentPoints);
             });
-            studentsPoint.put(k, values);
+            task2.put(k, values);
         });
-        return studentsPoint;
+        return task2;
     }
 
     public HashMap<String, HashMap<String, Integer>> sumPoints() {
-        HashMap<String, HashMap<String, Integer>> sumPoints = new HashMap<>();
-        studentsPoint().forEach((k, v) -> {
+        task3 = new HashMap<>();
+        task2.forEach((k, v) -> {
             HashMap<String, Integer> values = new HashMap<>();
             v.forEach((student, point) -> {
                 int sum = 0;
@@ -89,41 +92,37 @@ public class Part1 {
                 }
                 values.put(student, sum);
             });
-            sumPoints.put(k, values);
+            task3.put(k, values);
         });
-        return sumPoints;
+        return task3;
     }
 
     public HashMap<String, Float> groupAvg() {
-        HashMap<String, Float> groupAvg = new HashMap<>();
-        sumPoints().forEach((group, students) -> {
+        task4 = new HashMap<>();
+        task3.forEach((group, students) -> {
             final int[] sum = {0};
             final float[] n = {0};
             students.forEach((s, integer) -> {
                 sum[0] +=integer;
                 n[0]++;
             });
-            groupAvg.put(group, sum[0] / n[0]);
+            task4.put(group, sum[0] / n[0]);
         });
-        return  groupAvg;
+        return task4;
     }
 
     public HashMap<String, ArrayList<String>> passedPerGroup() {
-        HashMap<String, ArrayList<String>> passedPerGroup = new HashMap<>();
-        sumPoints().forEach((group, students) -> {
+        task5 = new HashMap<>();
+        task3.forEach((group, students) -> {
             ArrayList<String> passedStudents = new ArrayList<>();
             students.forEach((student, point) -> {
-                if (point > 60) {
+                if (point >= 60) {
                     passedStudents.add(student);
                 }
             });
-            passedPerGroup.put(group, passedStudents);
+            task5.put(group, passedStudents);
         });
-        return passedPerGroup;
+        return task5;
     }
 
-    public HashMap<String, HashMap<String, String>> print() {
-        HashMap<String, HashMap<String, String>> print = new HashMap<>();
-        return print;
-    }
 }
